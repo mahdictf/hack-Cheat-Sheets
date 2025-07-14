@@ -5,6 +5,7 @@ This repo has a collection of snippets of codes and commands to help our lives! 
 ## Resources
 i find these Repos very userfull 
 - [Kali linux cheat sheet](https://github.com/NoorQureshi/kali-linux-cheatsheet)
+- [Pentesting Tactics](https://hackviser.com/tactics/pentesting)
 
 ---
 ## Ninja Table
