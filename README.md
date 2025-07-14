@@ -122,7 +122,3 @@ hydra -l root -P passwords.txt [-t 32] <IP> telnet
 hydra -L /root/Desktop/user.txt -P /root/Desktop/pass.txt -s <PORT> <IP> vnc
 ```
 
-```
-
-Let me know if you want this saved or exported as a downloadable file.
-```
