@@ -6,6 +6,7 @@ This repo has a collection of snippets of codes and commands to help our lives! 
 i find these Repos very userfull 
 - [Kali linux cheat sheet](https://github.com/NoorQureshi/kali-linux-cheatsheet)
 - [Pentesting Tactics](https://hackviser.com/tactics/pentesting)
+- [Windows Registry Attacks Cheat Sheet](https://infoseclabs.io/wp-content/uploads/simple-file-list/Windows-Registry-Attacks-Cheat-Sheet.pdf)
 
 ---
 ## Ninja Table
