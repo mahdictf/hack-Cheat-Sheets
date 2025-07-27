@@ -21,7 +21,7 @@ i find these Repos very userfull
 
 
 
-## 1. Hydra Cheat Sheet
+# 1. Hydra Cheat Sheet
 
 
 ## RDP
@@ -128,7 +128,7 @@ hydra -L /root/Desktop/user.txt -P /root/Desktop/pass.txt -s <PORT> <IP> vnc
 ```
 
 
-## 2. SQLmap cheat sheet
+# 2. SQLmap cheat sheet
 
 ### Installation 
 
