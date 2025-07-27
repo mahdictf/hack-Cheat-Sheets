@@ -13,7 +13,7 @@ i find these Repos very userfull
 1. [Hydra cheat sheet](#1-Hydra-Cheat-Sheet)
 2. [SQLmap Cheat sheet](#2-SQLmap-cheat-sheet)
 3. [Nikto cheat sheet](#3-Essential-Nikto-Commands-for-Hackers)
-4. [Nuclei Cheat sheet](#4-Ultimate-Nuclei-Cheat-Sheet-for-Hackers)
+4. [Nuclei Cheat sheet](#4-Ultimate-Nuclei-Cheat-Sheet-for-Hackers-(Essential-Commands-Only))
 
 
 ---
