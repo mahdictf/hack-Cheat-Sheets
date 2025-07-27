@@ -13,6 +13,7 @@ i find these Repos very userfull
 1. [Hydra cheat sheet](#1-Hydra-Cheat-Sheet)
 2. [SQLmap Cheat sheet](#2-SQLmap-cheat-sheet)
 3. [Nikto cheat sheet](#3-Essential-Nikto-Commands-for-Hackers)
+4. [Nuclei Cheat sheet](#4-Ultimate-Nuclei-Cheat-Sheet-for-Hackers)
 
 
 ---
@@ -384,6 +385,257 @@ nikto -h target.com | grep -E "(OSVDB|CVE|+ |ERROR)" > critical_findings.txt
 
 ---
 
+
+# 4. Ultimate Nuclei Cheat Sheet for Hackers (Essential Commands Only)
+
+## Installation & Setup
+```bash
+# Install
+go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+
+# CRITICAL - Update templates first!
+nuclei -update-templates
+```
+
+## The Essential Commands Every Hacker Needs
+
+### **1. Core CVE Hunting (Priority #1)**
+```bash
+# Critical vulnerabilities only
+nuclei -u target.com -t cves/ -s critical,high
+
+# Recent CVEs (most likely unpatched)
+nuclei -u target.com -t cves/2024/ -t cves/2023/
+
+# Mass CVE hunting
+nuclei -l targets.txt -t cves/ -s critical,high -j -o findings.json
+```
+
+### **2. Multi-Target Operations**
+```bash
+# File-based scanning
+nuclei -l targets.txt -t cves/ -t vulnerabilities/ -s critical,high
+
+# Network range
+nuclei -u 192.168.1.1-254 -t cves/
+
+# Subdomain pipeline
+subfinder -d target.com | nuclei -t cves/ -s critical,high
+```
+
+### **3. Stealth & Evasion**
+```bash
+# Rate limited stealth scan
+nuclei -u target.com -t cves/ -rl 5 -proxy-url http://127.0.0.1:8080
+
+# Custom headers to avoid detection
+nuclei -u target.com -t cves/ -H "User-Agent: Mozilla/5.0" -rl 10
+```
+
+### **4. High-Value Target Categories**
+```bash
+# Default credentials
+nuclei -u target.com -t default-logins/
+
+# Information disclosure (bug bounty gold)
+nuclei -u target.com -t exposures/ -t misconfiguration/
+
+# Authentication bypass
+nuclei -u target.com -tags auth-bypass,sqli,rce
+```
+
+## The Hacker's Power Commands
+
+### **The Penetration Tester's Arsenal**
+```bash
+nuclei -l targets.txt -t cves/ -t vulnerabilities/ -t default-logins/ -s critical,high -j -o pwn.json
+```
+
+### **The Bug Bounty Hunter's Weapon**
+```bash
+nuclei -u target.com -t exposures/ -t misconfiguration/ -tags disclosure,config,backup -j -o bounty.json
+```
+
+### **The Red Teamer's Tool**
+```bash
+nuclei -u target.com -t cves/ -tags rce,auth-bypass,sqli -rl 5 -proxy-url http://127.0.0.1:8080
+```
+
+### **The Infrastructure Scanner**
+```bash
+nuclei -l network.txt -t network/ -t ssl/ -tags ssl,cert,ssh,ftp
+```
+
+## Critical Template Categories
+
+```bash
+# Remote Code Execution (HIGHEST PRIORITY)
+nuclei -u target.com -tags rce
+
+# SQL Injection
+nuclei -u target.com -tags sqli
+
+# Authentication Bypass
+nuclei -u target.com -tags auth-bypass
+
+# File Upload Vulnerabilities
+nuclei -u target.com -tags upload,file
+
+# Server-Side Request Forgery
+nuclei -u target.com -tags ssrf
+```
+
+## Output & Analysis
+
+### **Essential Output Formats**
+```bash
+# JSON for parsing
+nuclei -u target.com -t cves/ -j -o results.json
+
+# Silent mode (findings only)
+nuclei -u target.com -t cves/ -silent
+
+# Markdown report
+nuclei -u target.com -t cves/ -me report.md
+```
+
+### **Quick Analysis**
+```bash
+# Extract critical findings
+cat results.json | jq '.info | select(.severity=="critical")'
+
+# Count by severity
+cat results.json | jq -r '.info.severity' | sort | uniq -c
+
+# Get unique CVEs found
+cat results.json | jq -r '.template' | grep CVE | sort -u
+```
+
+## Tool Integration
+
+### **Mass Reconnaissance Pipeline**
+```bash
+# Complete automation
+subfinder -d target.com | httpx -silent | nuclei -t cves/ -t vulnerabilities/ -s critical,high -j -o results.json
+```
+
+### **With Other ProjectDiscovery Tools**
+```bash
+# Port discovery + vulnerability scan
+naabu -host target.com | nuclei -t network/
+
+# HTTP probe + web vuln scan
+httpx -l domains.txt | nuclei -t cves/ -t exposures/
+```
+
+## Performance & Scale
+
+### **High-Performance Scanning**
+```bash
+# Increase concurrency
+nuclei -l targets.txt -c 50 -t cves/
+
+# Bulk operations
+nuclei -l targets.txt -bulk-size 25 -t cves/ -s critical,high
+```
+
+### **Resource Optimization**
+```bash
+# Stream mode for large target lists
+nuclei -l huge_targets.txt -stream -t cves/
+
+# Memory efficient
+nuclei -l targets.txt -t cves/ -timeout 10 -retries 1
+```
+
+## Real-World Hacker Workflows
+
+### **Phase 1: Quick Assessment**
+```bash
+nuclei -u target.com -t cves/ -s critical,high -silent
+```
+
+### **Phase 2: Deep Reconnaissance**
+```bash
+nuclei -u target.com -t exposures/ -t misconfiguration/ -t technologies/
+```
+
+### **Phase 3: Exploitation Prep**
+```bash
+nuclei -u target.com -t default-logins/ -t vulnerabilities/ -tags rce,sqli,auth-bypass
+```
+
+## Advanced Multi-Commands
+
+### **Complete Bug Bounty Automation**
+```bash
+#!/bin/bash
+domain=$1
+subfinder -d $domain | httpx -silent | nuclei -t cves/ -t exposures/ -t misconfiguration/ -s medium,high,critical -j -o ${domain}_complete.json
+```
+
+### **Enterprise Penetration Testing**
+```bash
+#!/bin/bash
+# Full infrastructure assessment
+nuclei -l internal_network.txt -t cves/ -t network/ -t ssl/ -t default-logins/ -s critical,high -j -o pentest_findings.json
+```
+
+### **Continuous Monitoring**
+```bash
+#!/bin/bash
+# Daily security check
+nuclei -l production_assets.txt -t cves/2024/ -s critical,high -j -o daily_$(date +%Y%m%d).json
+```
+
+## Critical Flags Reference
+
+| Flag | Purpose | Example |
+|------|---------|---------|
+| `-t` | Templates | `-t cves/` |
+| `-s` | Severity | `-s critical,high` |
+| `-l` | Target list | `-l targets.txt` |
+| `-j` | JSON output | `-j -o results.json` |
+| `-rl` | Rate limit | `-rl 10` |
+| `-c` | Concurrency | `-c 50` |
+| `-tags` | Filter by tags | `-tags rce,sqli` |
+| `-proxy-url` | Use proxy | `-proxy-url http://127.0.0.1:8080` |
+| `-silent` | Quiet mode | `-silent` |
+| `-update-templates` | Update DB | `-update-templates` |
+
+## The Only Commands You Actually Need
+
+### **Daily Use (80% of the time)**
+```bash
+# Basic CVE hunting
+nuclei -u target.com -t cves/ -s critical,high
+
+# Mass scanning
+nuclei -l targets.txt -t cves/ -t vulnerabilities/ -s critical,high -j -o results.json
+
+# Stealth scanning
+nuclei -u target.com -t cves/ -rl 5 -silent
+```
+
+### **Advanced Use (20% of the time)**
+```bash
+# Full automation pipeline
+subfinder -d target.com | nuclei -t cves/ -t exposures/ -s critical,high
+
+# Custom template testing
+nuclei -u target.com -t custom-template.yaml -debug
+
+# Infrastructure scanning
+nuclei -l networks.txt -t network/ -t ssl/ -tags ssh,ssl,cert
+```
+
+---
+
+**Remember**: 
+- Run `nuclei -update-templates` before every engagement
+- Focus on CVEs first (guaranteed exploitability)
+- Use JSON output for automated parsing
+- Always scan with proper authorization
 
 
 
