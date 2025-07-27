@@ -12,6 +12,7 @@ i find these Repos very userfull
 ## Ninja Table
 1. [Hydra cheat sheet](#1-Hydra-Cheat-Sheet)
 2. [SQLmap Cheat sheet](#2-SQLmap-cheat-sheet)
+3. [Nikto cheat sheet](#3-Essential-Nikto-Commands-for-Hackers)
 
 
 ---
@@ -213,6 +214,176 @@ If the SQL injection vulnerability is observed **positive** then you can use the
 ### Get access to SQL shell
 
     sqlmap -u “https://target_site.com/page?p1=value1” --sqlmap-shell
+
+
+
+# 3. Essential Nikto Commands for Hackers
+
+## Core Reconnaissance Commands
+
+### 1. **Basic Target Assessment**
+```bash
+# Quick vulnerability scan
+nikto -h target.com
+
+# SSL-enabled scan
+nikto -h https://target.com -ssl
+```
+
+### 2. **Stealth & Evasion**
+```bash
+# Stealth scan with custom user agent
+nikto -h target.com -useragent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+# Slow scan to avoid detection
+nikto -h target.com -T 012 -timeout 30
+
+# Through proxy (Tor/Burp)
+nikto -h target.com -useproxy http://127.0.0.1:8080
+```
+
+### 3. **Authentication Bypass Testing**
+```bash
+# Test with credentials
+nikto -h target.com -id admin:admin
+
+# Session-based scanning
+nikto -h target.com -C "PHPSESSID=abc123; auth_token=xyz789"
+
+# Custom headers for bypass
+nikto -h target.com -H "X-Forwarded-For: 127.0.0.1"
+```
+
+### 4. **High-Value Vulnerability Hunting**
+```bash
+# Focus on critical vulns (RCE, SQLi, Auth bypass)
+nikto -h target.com -Tuning 8,9,a
+
+# Comprehensive security audit
+nikto -h target.com -Tuning 1,2,3,4,5,6,7,8,9,0,a,b,c
+
+# Information disclosure focus
+nikto -h target.com -Tuning 3,b
+```
+
+### 5. **Multi-Target Operations**
+```bash
+# Scan multiple targets from file
+nikto -h targets.txt
+
+# Network range scanning
+nikto -h 192.168.1.1-254 -p 80,443
+
+# Subnet scanning
+nikto -h 10.0.0.0/24
+```
+
+### 6. **Advanced Enumeration**
+```bash
+# Directory-specific scanning
+nikto -h target.com -root /admin
+
+# Multiple ports
+nikto -h target.com -p 80,443,8080,8443
+
+# Skip SSL cert verification
+nikto -h https://target.com -nossl
+```
+
+### 7. **Output for Reporting**
+```bash
+# HTML report for clients
+nikto -h target.com -Format htm -o report.html
+
+# Machine-readable XML
+nikto -h target.com -Format xml -o results.xml
+
+# Quick text output
+nikto -h target.com -o findings.txt
+```
+
+## Critical One-Liners
+
+### **The Penetration Tester's Favorite**
+```bash
+nikto -h target.com -Tuning 1,2,3,8,9,a -ssl -Format htm -o pwn_results.html
+```
+*Scans for file disclosure, misconfig, info leak, RCE, SQLi, and auth bypass*
+
+### **The Stealth Operator**
+```bash
+nikto -h target.com -T 012 -timeout 30 -useragent "Mozilla/5.0" -useproxy http://127.0.0.1:9050
+```
+*Low-profile scan through Tor with realistic user agent*
+
+### **The Bug Bounty Hunter**
+```bash
+nikto -h target.com -Tuning 3,4,5,9 -ssl -root /api -Format xml -o bounty.xml
+```
+*Focuses on info disclosure, XSS, file retrieval, and SQLi in API endpoints*
+
+### **The Red Teamer**
+```bash
+nikto -h target.com -Tuning 8,a -C "session=admin_token" -H "X-Real-IP: 127.0.0.1"
+```
+*Targets RCE and auth bypass with session hijacking and IP spoofing*
+
+## What Hackers Look For
+
+### **Immediate Exploitation Opportunities**
+- Default credentials (admin/admin, root/root)
+- Unprotected admin panels
+- File upload vulnerabilities
+- Command injection points
+- SQL injection entry points
+
+### **Information Gathering Gold**
+- Server versions and technologies
+- Directory structures
+- Configuration file exposure
+- Backup file locations
+- Source code leaks
+
+### **Privilege Escalation Paths**
+- Authentication bypass methods
+- Session management flaws
+- Access control misconfigurations
+- Administrative interface exposure
+
+## Pro Tips for Real Engagements
+
+### **Avoid Detection**
+```bash
+# Randomize timing
+nikto -h target.com -timeout $(shuf -i 10-30 -n 1)
+
+# Use residential proxy chains
+nikto -h target.com -useproxy http://proxy1:8080
+```
+
+### **Maximum Coverage**
+```bash
+# Full port scan integration
+for port in $(nmap -p- --open target.com | grep open | cut -d/ -f1); do
+    nikto -h target.com -p $port
+done
+```
+
+### **Automated Reporting**
+```bash
+# Quick findings extract
+nikto -h target.com | grep -E "(OSVDB|CVE|+ |ERROR)" > critical_findings.txt
+```
+
+## The Hacker's Nikto Workflow
+
+1. **Reconnaissance**: `nikto -h target.com -Tuning b`
+2. **Vulnerability Discovery**: `nikto -h target.com -Tuning 8,9,a`  
+3. **Information Gathering**: `nikto -h target.com -Tuning 1,2,3`
+4. **Exploitation Prep**: `nikto -h target.com -root /admin -C "session_token"`
+
+---
+
 
 
 
